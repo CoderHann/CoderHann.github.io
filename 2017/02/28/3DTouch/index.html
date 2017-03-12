@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="实用技术," />
 
 
 
@@ -101,7 +101,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/3DTouch/3dtouch_peek_img.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/3DTouch/3dtouch_actions_img.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/3DTouch/3dtouch_pop_img.png">
-<meta property="og:updated_time" content="2017-03-12T07:35:34.000Z">
+<meta property="og:updated_time" content="2017-03-12T07:54:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="3D-Touch的使用">
 <meta name="twitter:description" content="2015年9月10日，苹果在新品发布会上宣布了3D-Touch功能。这是一种立体触控技术，屏幕可感应不同的感压力度触控，很明显这种技术给APP的交互又增添了样式。Hann作为一名iOS开发者自然对这种新技术感到好奇，经过一番的资料搜集与学习，成功的将这种功能添加到正在开发的APP中。将3DTouch有关的知识点记录下来以供自己查阅，也给有需求的开发人员提供一些参考。
@@ -317,6 +317,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -377,7 +399,7 @@
 <h3 id="动态标签"><a href="#动态标签" class="headerlink" title="动态标签"></a>动态标签</h3><p>在添加动态标签之前我们先来了解几个相关的类：</p>
 <p><code>UIApplicationShortcutIcon</code>标签图标类<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIApplicationShortcutIcon</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// 使用系统icon时用这个API创建UIApplicationShortcutIcon对象.</span></div><div class="line">+ (<span class="keyword">instancetype</span>)iconWithType:(<span class="built_in">UIApplicationShortcutIconType</span>)type;</div><div class="line"></div><div class="line"><span class="comment">// 使用提供的图片自定义UIApplicationShortcutIcon对象，templateImageName为图片名.</span></div><div class="line">+ (<span class="keyword">instancetype</span>)iconWithTemplateImageName:(<span class="built_in">NSString</span> *)templateImageName;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
 <p><code>UIApplicationShortcutItem</code>标签类<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIApplicationShortcutItem</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>, <span class="title">NSMutableCopying</span>&gt;</span></div><div class="line"><span class="comment">/**</span></div><div class="line">  * type: 标签ID</div><div class="line">  * localizedTitle: 标签名称</div><div class="line">  * localizedSubtitle: 子标题名称</div><div class="line">  * icon: 标签图标对象</div><div class="line">  * userInfo: 附加信息</div><div class="line">  */</div><div class="line">- (<span class="keyword">instancetype</span>)initWithType:(<span class="built_in">NSString</span> *)type localizedTitle:(<span class="built_in">NSString</span> *)localizedTitle localizedSubtitle:(<span class="keyword">nullable</span> <span class="built_in">NSString</span> *)localizedSubtitle icon:(<span class="keyword">nullable</span> <span class="built_in">UIApplicationShortcutIcon</span> *)icon userInfo:(<span class="keyword">nullable</span> <span class="built_in">NSDictionary</span> *)userInfo;</div><div class="line"></div><div class="line"><span class="comment">// 图标对象</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">nonatomic</span>, <span class="keyword">copy</span>, <span class="keyword">readonly</span>) <span class="built_in">UIApplicationShortcutIcon</span> *icon;</div><div class="line"></div><div class="line"><span class="comment">// 对应静态标签的UIApplicationShortcutItemUserInfo.</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">nonatomic</span>, <span class="keyword">copy</span>, <span class="keyword">readonly</span>) <span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *, <span class="keyword">id</span> &lt;<span class="built_in">NSSecureCoding</span>&gt;&gt; *userInfo;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
-<p>再了解这两个类后我们来看看动态添加标签的代码：</p>
+<p>在了解这两个类后我们来看看动态添加标签的代码：</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AppDelegate.m</span></div><div class="line"><span class="comment">// - (BOOL)application:didFinishLaunchingWithOptions:</span></div><div class="line"><span class="comment">// 动态添加快捷启动</span></div><div class="line">    <span class="built_in">UIApplicationShortcutIcon</span> *iconThree = [<span class="built_in">UIApplicationShortcutIcon</span> iconWithTemplateImageName:<span class="string">@"showItemIconThree"</span>];</div><div class="line">    <span class="built_in">UIApplicationShortcutItem</span> *itemThree = [[<span class="built_in">UIApplicationShortcutItem</span> alloc] initWithType:<span class="string">@"shortcutTypeThree"</span> localizedTitle:<span class="string">@"动态标签"</span> localizedSubtitle:<span class="literal">nil</span> icon:iconThree userInfo:<span class="literal">nil</span>];</div><div class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] setShortcutItems:@[itemThree]];</div></pre></td></tr></table></figure>
 <p>现在你可以使用静态、动态以及混合方式创建快捷启动标签，注意启动标签最多可以有4个。下面就是我们创建的三个标签：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/3DTouch/3dtouch_iconTags_img.png" width="350" ,height="450"></p>
 <h3 id="标签的点击事件交互"><a href="#标签的点击事件交互" class="headerlink" title="标签的点击事件交互"></a>标签的点击事件交互</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AppDelegate.m</span></div><div class="line">- (<span class="keyword">void</span>)application:(<span class="built_in">UIApplication</span> *)application performActionForShortcutItem:(<span class="built_in">UIApplicationShortcutItem</span> *)shortcutItem completionHandler:(<span class="keyword">void</span> (^)(<span class="built_in">BOOL</span>))completionHandler &#123;</div><div class="line">    </div><div class="line">    <span class="built_in">UINavigationController</span> *nav = (<span class="built_in">UINavigationController</span> *)<span class="keyword">self</span>.window.rootViewController;</div><div class="line">    BSDetailViewController *detailVC = [[BSDetailViewController alloc] init];</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([shortcutItem.type isEqualToString:<span class="string">@"shortcutTypeOne"</span>]) &#123;</div><div class="line">        detailVC.navTitle = <span class="string">@"静态标签一"</span>;</div><div class="line">        </div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([shortcutItem.type isEqualToString:<span class="string">@"shortcutTypeTwo"</span>]) &#123;</div><div class="line">        detailVC.navTitle = <span class="string">@"静态标签二"</span>;</div><div class="line">        </div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([shortcutItem.type isEqualToString:<span class="string">@"shortcutTypeThree"</span>]) &#123;</div><div class="line">        detailVC.navTitle = <span class="string">@"动态标签"</span>;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    [nav pushViewController:detailVC animated:<span class="literal">YES</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -411,6 +433,12 @@
 
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/实用技术/" rel="tag"># 实用技术</a>
+          
+        </div>
       
 
       
@@ -494,7 +522,21 @@
           
 
           
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
 
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
           
 
         </nav>
