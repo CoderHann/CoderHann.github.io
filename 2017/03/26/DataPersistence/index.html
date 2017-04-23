@@ -1,0 +1,947 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="实用技术," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="概述Q:    数据持久化是什么？A:    数据持久化简单的说就是将APP生成、接收到的数据从内存上写入到硬盘、U盘等外部永久性存储设备上，以便应用重启后能继续使用这些数据。
+Q:    数据持久化的作用以及常用的形式是什么？A:    由于APP运行在内存中，这种存储器在断电时将丢失其存储的内容。数据持久化通常将内存中的数据以文件，数据库的形式写入到硬盘等断电不丢失数据的存储设备上，这样在应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DataPersistence For iOS">
+<meta property="og:url" content="http://yoursite.com/2017/03/26/DataPersistence/index.html">
+<meta property="og:site_name" content="CoderHann">
+<meta property="og:description" content="概述Q:    数据持久化是什么？A:    数据持久化简单的说就是将APP生成、接收到的数据从内存上写入到硬盘、U盘等外部永久性存储设备上，以便应用重启后能继续使用这些数据。
+Q:    数据持久化的作用以及常用的形式是什么？A:    由于APP运行在内存中，这种存储器在断电时将丢失其存储的内容。数据持久化通常将内存中的数据以文件，数据库的形式写入到硬盘等断电不丢失数据的存储设备上，这样在应">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_hardDick.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_aboutSandboxing.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_sql_tableImg.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_sql_addData.png">
+<meta property="og:updated_time" content="2017-04-23T13:04:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DataPersistence For iOS">
+<meta name="twitter:description" content="概述Q:    数据持久化是什么？A:    数据持久化简单的说就是将APP生成、接收到的数据从内存上写入到硬盘、U盘等外部永久性存储设备上，以便应用重启后能继续使用这些数据。
+Q:    数据持久化的作用以及常用的形式是什么？A:    由于APP运行在内存中，这种存储器在断电时将丢失其存储的内容。数据持久化通常将内存中的数据以文件，数据库的形式写入到硬盘等断电不丢失数据的存储设备上，这样在应">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_hardDick.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/26/DataPersistence/"/>
+
+
+
+
+
+  <title> DataPersistence For iOS | CoderHann </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CoderHann</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">coderHann’s blog</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/26/DataPersistence/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="CoderHann">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://github.com/CoderHann/imageSource/blob/master/Blog/blog_usr_icon.jpeg?raw=true">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="CoderHann">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="CoderHann" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                DataPersistence For iOS
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-26T11:11:57+08:00">
+                2017-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/26/DataPersistence/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/26/DataPersistence/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/03/26/DataPersistence/" class="leancloud_visitors" data-flag-title="DataPersistence For iOS">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_hardDick.png" width="500" height="330"></p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Q:    数据持久化是什么？<br>A:    数据持久化简单的说就是将APP生成、接收到的数据从内存上写入到硬盘、U盘等外部永久性存储设备上，以便应用重启后能继续使用这些数据。</p>
+<p>Q:    数据持久化的作用以及常用的形式是什么？<br>A:    由于APP运行在内存中，这种存储器在断电时将丢失其存储的内容。数据持久化通常将内存中的数据以文件，数据库的形式写入到硬盘等断电不丢失数据的存储设备上，这样在应用重启后能够读到持久化也就是断电前的数据，以及恢复软件的状态，继续之前的工作。<br><a id="more"></a><br>Q:    iOS中常用的数据持久化方式有哪些？<br>A:<br>preference<br>NSKeyedArchiver<br>FMDB(SQLite 3)<br>CoreData    </p>
+<h3 id="MainBundle-amp-沙盒"><a href="#MainBundle-amp-沙盒" class="headerlink" title="MainBundle &amp; 沙盒"></a>MainBundle &amp; 沙盒</h3><p>在了解各种持久化方式前，我们先简单了解下iOS应用的MainBundle以及沙盒目录相关信息以及结构。</p>
+<h4 id="MainBundle-安装目录"><a href="#MainBundle-安装目录" class="headerlink" title="MainBundle(安装目录)"></a>MainBundle(安装目录)</h4><p>MainBundle是指APP在手机中的安装路径，该目录下存放有关该应用的资源文件、可执行的二进制文件以及nib文件等程序运行所依赖的资源。</p>
+<p>查看MainBundle目录：<br>通过更改应用后缀名<code>.ipa</code>到<code>.zip</code>，解压后显示包内容即可查看。</p>
+<p>开发中获取MainBundle：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="built_in">NSBundle</span> mainBundle].bundlePath</div></pre></td></tr></table></figure></p>
+<h4 id="沙盒-数据目录"><a href="#沙盒-数据目录" class="headerlink" title="沙盒(数据目录)"></a>沙盒(数据目录)</h4><h5 id="沙盒机制"><a href="#沙盒机制" class="headerlink" title="沙盒机制"></a>沙盒机制</h5><p>沙盒机制是苹果提供的访问控制技术。每个应用都有自己的沙盒，可以在对应的沙盒中进行读取和写入数据等操作，不能访问其他应用的沙盒的数据，可以说沙盒机制使得iOS系统更加安全。下图右侧为沙盒机制图解：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_aboutSandboxing.png"></p>
+<h5 id="沙盒目录"><a href="#沙盒目录" class="headerlink" title="沙盒目录"></a>沙盒目录</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *sandboxHomePath = <span class="built_in">NSHomeDirectory</span>();</div></pre></td></tr></table></figure>
+<p>进入到沙盒根目录后结构如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 沙盒目录结构</span></div><div class="line">Document</div><div class="line">Library:</div><div class="line">    Caches</div><div class="line">    Preferences</div><div class="line">tmp</div></pre></td></tr></table></figure></p>
+<p><strong>Document:</strong><br>获取方法：<code>NSDocumentDirectory</code><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *documentPath = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>).firstObject;</div></pre></td></tr></table></figure></p>
+<p>Document目录一般存储比较重要的文件例如：本地数据库、归档，应用信息等。通过 iTunes、iCloud 备份时会备份该目录下文件。</p>
+<p><strong>Library/Caches</strong><br>获取方法：<code>NSCachesDirectory</code><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *cachesPath = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSCachesDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>).firstObject;</div></pre></td></tr></table></figure></p>
+<p>Caches目录一般存储体积较大不需要备份的文件例如：图片、音乐、视频缓存等。进行iTunes、iCloud备份时不会备份该目录下的文件，该目录下的文件不会被应用自动删除，需要程序提供清除缓存的方法去删除这些缓存数据。</p>
+<p><strong>Library/Preferences</strong><br>Preferences目录存储有关应用偏好设置等重要信息，由系统的NSUserDefaults进行读写操作。进行iTunes、iCloud备份时会备份该目录下文件。</p>
+<p><strong>tmp</strong><br>获取方法：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *tempPath = <span class="built_in">NSTemporaryDirectory</span>();</div></pre></td></tr></table></figure></p>
+<p>tmp目录一般存储应用产生的临时数据，该目录下的文件可能随时被系统清理掉，进行iTunes、iCloud备份时不会备份该目录的文件。</p>
+<p>经过上面各个沙盒目录基本特点介绍后，我们在项目中可以根据不同的数据类型以及使用的场景选择恰当的存储目录进行数据持久化存储。下面我们进入正题~</p>
+<h3 id="preference"><a href="#preference" class="headerlink" title="preference"></a>preference</h3><p>使用偏好进行数据持久化的实质是在Library/Preferences目录下生成一个以Bundle Identifier命名的.plist文件。并不是每种类型都能写入到plist文件中，plist文件接受<code>NSNumber</code>,<code>NSString</code>,<code>NSDate</code>,<code>NSArray</code>,<code>NSDictionary</code>,<code>BOOL</code>,<code>NSData</code>,<code>Integer</code>,<code>float</code>,<code>double</code>类型的数据。下面我们来看下它的基本用法：</p>
+<p>写入：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSUserDefaults</span> *userDefaults = [<span class="built_in">NSUserDefaults</span> standardUserDefaults];</div><div class="line">[userDefaults setObject:<span class="string">@"8.1"</span> forKey:<span class="string">@"xcode"</span>];</div><div class="line">[userDefaults setBool:<span class="literal">YES</span> forKey:<span class="string">@"isLatest"</span>];</div><div class="line">[userDefaults synchronize];</div></pre></td></tr></table></figure></p>
+<p>读取：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *xcode = [userDefaults stringForKey:<span class="string">@"xcode"</span>];</div><div class="line"><span class="built_in">BOOL</span> isLatestVersion = [userDefaults boolForKey:<span class="string">@"isLatest"</span>];</div></pre></td></tr></table></figure></p>
+<p>偏好文件是由一个NSUserDefaults类型的单例来控制存储和读取的，而写入的synchronize方法不是一定调用的，因为系统默认也会调用，可能不是你想要的时间点。主动调用synchronize方法会立即执行写入操作是没有问题的。</p>
+<p>注意点：</p>
+<ul>
+<li>plist默认支持以上的几种数据类型，如果我要想存储图片信息不能直接传入UIImage的类型，但可以将UIImage转换为NSData后进行存储。</li>
+<li>NSArray，NSDictionary中存储的对象也要是上面的这几种类型才能正确写入和读取。</li>
+<li>plist支持存储<code>NSMutableString</code>,<code>NSMutableDictionary</code>,<code>NSMutableArray</code>这些可变的类型，但是再次读取出来的类型变为不可变类型的。官方给的介绍如下：<br><code>Values returned from NSUser Defaults are immutable, even if you set a mutable object as the value. For example, if you set a mutable string as the value for &quot;My String Default&quot;, the string you later retrieve using string For Key: will be immutable.</code><br>以上是对preference存储的简单介绍，更多关于偏好存储的信息可以查阅官方文档<a href="https://developer.apple.com/reference/foundation/nsuserdefaults?language=objc" title="NSUserDefaults" target="_blank" rel="external">Apple Document</a></li>
+</ul>
+<h3 id="NSKeyedArchiver"><a href="#NSKeyedArchiver" class="headerlink" title="NSKeyedArchiver"></a>NSKeyedArchiver</h3><p>除了使用偏好设置plist进行简单的存储外，iOS还提供了另外一种持久化方式<code>归档</code>。这种方式的存储一般存储某个类实例的数据以便下次、以后使用。简单的来看这种存储方式就是将实例数据进行编码为二进制文件，然后用的时候再以归档时的规则进行解码的过程。</p>
+<p>上代码之前我们先了解下<code>归档</code> &amp; <code>解档</code>相关类和方法：</p>
+<p><strong>归档：</strong>NSKeyedArchiver继承自NSCoder，提供了工厂方法<code>archiveRootObject:toFile:</code>将对象写入指定文件路径。</p>
+<p><strong>解档：</strong>NSKeyedUnarchiver也是继承自NSCoder，提供的工厂方法<code>unarchiveObjectWithFile:</code>将对象从指定文件路径读出。</p>
+<p><strong>NSCoding协议：</strong>使用这种存储方式需要自定义对象实现NSCoding的两个方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// person.h</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span>&lt;<span class="title">NSCoding</span>&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>)<span class="built_in">NSString</span> *personID;</div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>)<span class="built_in">NSString</span> *name;</div><div class="line"></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">assign</span>)<span class="built_in">BOOL</span> sex;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>归档方法：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// person.m</span></div><div class="line">- (<span class="keyword">void</span>)encodeWithCoder:(<span class="built_in">NSCoder</span> *)encoder &#123;</div><div class="line">    </div><div class="line">    [encoder encodeObject:_personID forKey:<span class="string">@"peronID"</span>];</div><div class="line">    [encoder encodeObject:_name forKey:<span class="string">@"name"</span>];</div><div class="line">    [encoder encodeBool:_sex forKey:<span class="string">@"sex"</span>];</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>解档方法：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// person.m</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)decoder &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (<span class="keyword">self</span> = [<span class="keyword">super</span> init]) &#123;</div><div class="line">        </div><div class="line">        _personID = [decoder decodeObjectForKey:<span class="string">@"peronID"</span>];</div><div class="line">        _name = [decoder decodeObjectForKey:<span class="string">@"name"</span>];</div><div class="line">        _sex = [decoder decodeBoolForKey:<span class="string">@"sex"</span>];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>既然Person已经提供了归档和解档的方法，我们就来看看如何使用吧：</p>
+<p><strong>归档</strong><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSKeyedArchiverViewController.m</span></div><div class="line">- (<span class="keyword">void</span>)writePerson &#123;</div><div class="line">    <span class="built_in">NSString</span> *filePath = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>).firstObject stringByAppendingPathComponent:<span class="string">@"person.archiver"</span>];</div><div class="line">    Person *person = [[Person alloc] init];</div><div class="line">    person.name = <span class="string">@"Tom"</span>;</div><div class="line">    person.personID = <span class="string">@"0001"</span>;</div><div class="line">    person.sex = <span class="literal">YES</span>;</div><div class="line">    [<span class="built_in">NSKeyedArchiver</span> archiveRootObject:person toFile:filePath];</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>解档</strong><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NSKeyedArchiverViewController.m</span></div><div class="line">- (<span class="keyword">void</span>)readPerson &#123;</div><div class="line">   <span class="built_in">NSString</span> *filePath = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>).firstObject stringByAppendingPathComponent:<span class="string">@"person.archiver"</span>];</div><div class="line">    Person *person = [<span class="built_in">NSKeyedUnarchiver</span> unarchiveObjectWithFile:filePath];</div><div class="line">    </div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"personName:%@"</span>,person.name);<span class="comment">//personName:Tom</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"personID:%@"</span>,person.personID);<span class="comment">//personID:0001</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"personSex:%zd"</span>,person.sex);<span class="comment">//personSex:1</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>以上是对Person对象归档以及解档的演示，其中主要的核心是将要进行归档的对象实现<code>NSCoding</code>协议。再调用对应的归档方法<code>[NSKeyedArchiver archiveRootObject:person toFile:filePath]</code>，以及解档方法<code>[NSKeyedUnarchiver unarchiveObjectWithFile:filePath]</code>去实现对象数据的<code>存储</code>和<code>读取</code>。其实在调用上述的归档方法、解档方法的背后调用了Person实现的归档和解档方法。</p>
+<p>注意点：</p>
+<ul>
+<li>使用这种存储方式的前提是要遵守NSCoding协议并实现两个解、归档的方法。</li>
+<li>归档这种存储方式不能够单独的对一个对象的某一个属性设置值，归档操作是一种覆盖操作，需要写入整个对象进行数据更新。所以这样的存储方式不适合那种经常对某一个属性进行更改的场景。</li>
+<li>如果对象的父类也实现了<code>NSCoding</code>协议，在<code>initWithCoder:</code>方法中需要调用<code>[super initWithCoder:]</code>来进行初始化。</li>
+</ul>
+<p>以上是对归档的这种方式持久化的介绍，想要获取更多有关归档的信息可以参考苹果官方文档<a href="https://developer.apple.com/reference/foundation/nskeyedarchiver?language=objc" title="NSKeyedArchiver" target="_blank" rel="external">Apple Document</a></p>
+<h3 id="FMDB-SQLite-3"><a href="#FMDB-SQLite-3" class="headerlink" title="FMDB(SQLite 3)"></a>FMDB(SQLite 3)</h3><p>除了上面的两种持久化方式之外还有个非常便利、轻巧的持久化存储方式–数据库。在这里简单介绍下SQLite 3，SQLite是一种轻型的关系型数据库，提供了大部分的数据库基础操作<code>增</code>、<code>删</code>、<code>改</code>，<code>查</code>。由于SQLite提供的都是C语言的API，不易使用和理解。所以我们在开发中使用封装了SQLite 3 的<a href="https://github.com/ccgus/fmdb" title="FMDB Github" target="_blank" rel="external">FMDB</a>这个第三方库进行数据库的管理。</p>
+<h4 id="FMDB简介"><a href="#FMDB简介" class="headerlink" title="FMDB简介"></a>FMDB简介</h4><p>在使用FMDB之前我们先简单了解FMDB相关的核心类和方法：</p>
+<ul>
+<li><p>FMDatabase<br>  提供了数据库的各种操作（打开关闭数据库，增删改查等）</p>
+  <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 更新数据库API</span></div><div class="line">- (<span class="built_in">BOOL</span>)executeUpdate:(<span class="built_in">NSString</span>*)sql;</div></pre></td></tr></table></figure>
+  <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 查询数据API</span></div><div class="line">- (FMResultSet *)executeQuery:(<span class="built_in">NSString</span>*)sql;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>FMResultSet<br>  数据库执行查询语句的结果集（每一行的数据集合）</p>
+  <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 获取数据库上对应字段的字符串</span></div><div class="line">- (<span class="built_in">NSString</span>*)stringForColumn:(<span class="built_in">NSString</span>*)columnName</div></pre></td></tr></table></figure>
+  <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 获取数据库上对应字段的int数据</span></div><div class="line">- (<span class="keyword">int</span>)intForColumn:(<span class="built_in">NSString</span>*)columnName</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>FMDatabaseQueue<br>  提供多线程数据库操作下的线程安全。</li>
+</ul>
+<h4 id="FMDB的使用"><a href="#FMDB的使用" class="headerlink" title="FMDB的使用"></a>FMDB的使用</h4><p>下面演示的FMDB的使用主要包括<code>数据库文件的创建</code>、<code>创建表</code>、以及数据库的基本操作<code>增</code>、<code>删</code>、<code>改</code>、<code>查</code>、<code>事务</code>，<code>线程安全</code>等的使用。该演示代码被封装在一个数据库管理工具<code>DataBaseTool</code>中，读者可以根据自己的设计思路对数据库的功能代码进行封装。</p>
+<p><strong>创建数据库文件</strong><br>在本例中所有的数据都是程序所产生的，所以数据库文件的创建放到了代码中，而不是将创建好的数据库文件放到bundle中。如果程序有依赖的数据库数据，比如一个不会更新的城市列表，一个程序所需要的数据字典，这种情况可以将数据库文件放到bundle中，待程序第一次使用时将数据库文件移动到沙盒文件目录下面使用。下面是本示例中的数据库文件创建：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">DataBaseTool</span></span></div><div class="line"><span class="keyword">static</span> FMDatabase *_dataBase;</div><div class="line"><span class="keyword">static</span> <span class="built_in">NSString</span> *_dbPath;</div><div class="line"></div><div class="line">+ (<span class="built_in">NSString</span> *)dbPath &#123;</div><div class="line">    </div><div class="line">    <span class="comment">// 懒加载获取数据库文件路径</span></div><div class="line">    <span class="keyword">if</span> (!_dbPath) &#123;</div><div class="line">    		</div><div class="line">        <span class="built_in">NSString</span> *filePath = [[<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSCachesDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) objectAtIndex:<span class="number">0</span>] stringByAppendingPathComponent:<span class="string">@"com.dataPersistence"</span>];</div><div class="line">        </div><div class="line">        <span class="built_in">NSFileManager</span> *fm = [<span class="built_in">NSFileManager</span> defaultManager];</div><div class="line">        <span class="keyword">if</span> (![fm fileExistsAtPath:filePath]) &#123;</div><div class="line">            <span class="comment">// 创建Library/Caches/com.dataPersistence目录</span></div><div class="line">            [fm createDirectoryAtPath:filePath withIntermediateDirectories:<span class="literal">YES</span> attributes:<span class="literal">nil</span> error:<span class="literal">nil</span>];</div><div class="line">            </div><div class="line">        &#125;</div><div class="line">        <span class="built_in">NSString</span> *dbPath = [filePath stringByAppendingPathComponent:<span class="string">@"DataPersistence.sqlite"</span>];</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (![fm fileExistsAtPath:dbPath]) &#123;</div><div class="line">            <span class="comment">// 创建Library/Caches/com.dataPersistence目录/DataPersistence.sqlite数据库文件</span></div><div class="line">            [fm createFileAtPath:dbPath contents:<span class="literal">nil</span> attributes:<span class="literal">nil</span>];</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        _dbPath = dbPath;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 返回数据库文件路径</span></div><div class="line">    <span class="keyword">return</span> _dbPath;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>上面是获取数据库文件的路径，如果获取路径上没有对应的数据库文件将会创建一个空的数据库文件。然后结合下面的两个方法<code>+ (BOOL)openDB;</code>，<code>+ (BOOL)closeDB;</code>操作数据库的打开和关闭：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (<span class="built_in">BOOL</span>)openDB &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!_dataBase) &#123;</div><div class="line">    	<span class="comment">// 用数据库文件路径初始化数据库</span></div><div class="line">        _dataBase = [FMDatabase databaseWithPath:[<span class="keyword">self</span> dbPath]];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="built_in">BOOL</span> isOpened = [_dataBase open];</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!isOpened) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"open DB failed!"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> isOpened;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">+ (<span class="built_in">BOOL</span>)closeDB &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!_dataBase) <span class="keyword">return</span> <span class="literal">YES</span>;</div><div class="line">    </div><div class="line">    <span class="built_in">BOOL</span> isClosed = [_dataBase close];</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!isClosed) &#123;</div><div class="line">        </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"close DB failed!"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> isClosed;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>每个操作数据库功能方法都需要打开和关闭数据库，因此我们提供的方法类似下面这样：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)method &#123;</div><div class="line">    <span class="comment">// 其他操作</span></div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        </div><div class="line">        <span class="comment">// 数据库操作</span></div><div class="line">        </div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">   <span class="comment">// 其他操作</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>创建表</strong><br>创建好对应的数据库文件，我们就可以在对应的数据库文件中创建表了。一般而言一个应用对应一个数据库即可，不同的模块、业务可以有自己的一个或者多个表，下面是创建person表的代码块：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (<span class="built_in">BOOL</span>)autoCreatePersonTable &#123;</div><div class="line">    </div><div class="line">    <span class="built_in">BOOL</span> isCreatedPersonTable = <span class="literal">NO</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        <span class="comment">// 判断是否已经存在t_person表</span></div><div class="line">        <span class="built_in">BOOL</span> isExist = [_dataBase tableExists:<span class="string">@"t_person"</span>];</div><div class="line">        </div><div class="line">        <span class="keyword">if</span> (!isExist) &#123;</div><div class="line">            <span class="comment">// 创建t_person表</span></div><div class="line">            isCreatedPersonTable = [_dataBase executeUpdate:<span class="string">@"CREATE TABLE IF NOT EXISTS t_person(personID text PRIMARY KEY, name text NOT NULL, sex bool NOT NULL)"</span>];</div><div class="line">            </div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            isCreatedPersonTable = <span class="literal">YES</span>;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> isCreatedPersonTable;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>创建表的sql语句：<code>CREATE TABLE IF NOT EXISTS tableName(字段1 类型 字段约束, 字段2 类型 字段约束,..)</code><br>使用上面的这个方法我们就创建了一个t_person的表，其字段结构如下：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_sql_tableImg.png" width="1148" height="240"><br><strong>增</strong><br>既然表已经创建好了那我们就给它添加点数据吧！<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (<span class="keyword">void</span>)insertPersonArray &#123;</div><div class="line">    <span class="comment">// 模拟了10条person数据</span></div><div class="line">    <span class="built_in">NSMutableArray</span> *personArray = [<span class="built_in">NSMutableArray</span> array];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">10</span>; index++) &#123;</div><div class="line">        Person *tempPerson = [[Person alloc] init];</div><div class="line">        tempPerson.personID = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%zd"</span>,<span class="number">10000</span>+index];</div><div class="line">        tempPerson.name = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"person%zd"</span>,index];</div><div class="line">        tempPerson.sex = index % <span class="number">2</span> == <span class="number">0</span>;</div><div class="line">        </div><div class="line">        [personArray addObject:tempPerson];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        <span class="comment">// 循环插入上面模拟的10条数据</span></div><div class="line">        <span class="keyword">for</span> (Person *person <span class="keyword">in</span> personArray) &#123;</div><div class="line">            </div><div class="line">            <span class="built_in">NSString</span> *insertPerson = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"INSERT INTO t_person (personID,name,sex) VALUES ('%@','%@','%d')"</span>,person.personID,person.name,person.sex];</div><div class="line">            [_dataBase executeUpdate:insertPerson];</div><div class="line">            </div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        </div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>添加数据的sql语句：<code>INSERT INTO tableName (字段1,字段2,...) VALUES (&#39;value1&#39;,&#39;value2&#39;,...)</code><br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/DataPersistence/dataPersistence_sql_addData.png" width="1148" height="240"><br><strong>删</strong><br>如下代码是删除personID为10000的操作：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (<span class="keyword">void</span>)deletePerson &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        </div><div class="line">        <span class="built_in">NSString</span> *deletePerson = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"DELETE FROM t_person WHERE personID = '10000'"</span>];</div><div class="line">        [_dataBase executeUpdate:deletePerson];</div><div class="line">        </div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>删除数据的sql语句：<code>DELETE FROM tableName WHERE express</code>,当没有条件语句则删除表中所有数据。<br><strong>改</strong><br>下面是将personID为10001时的name和sex分别更改为superMan、1：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (<span class="keyword">void</span>)updatePerson &#123;</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        </div><div class="line">        <span class="built_in">NSString</span> *updatePerson10001 = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"UPDATE t_person SET name='superMan',sex=1 WHERE personID = '10001'"</span>];</div><div class="line">        [_dataBase executeUpdate:updatePerson10001];</div><div class="line">        </div><div class="line">        </div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>更新数据的sql语句：<code>UPDATE tableName SET 字段1=&#39;值1&#39;,字段2=‘值2’ WHERE 字段=值</code>。<br><strong>查</strong><br>现在查询sex为1的所有数据：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (<span class="keyword">void</span>)selectPerson &#123;</div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        </div><div class="line">        <span class="built_in">NSString</span> *selectSex1 = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"SELECT * FROM t_person WHERE sex=1"</span>];</div><div class="line">        FMResultSet *set = [_dataBase executeQuery:selectSex1];</div><div class="line">        </div><div class="line">        <span class="keyword">while</span> ([set next]) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"ID:%@  name:%@  sex:%zd"</span>,[set stringForColumn:<span class="string">@"personID"</span>],[set stringForColumn:<span class="string">@"name"</span>],[set boolForColumn:<span class="string">@"sex"</span>]);</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// ID:10001  name:superMan  sex:1</span></div><div class="line">        <span class="comment">// ID:10002  name:person2  sex:1</span></div><div class="line">        <span class="comment">// ID:10004  name:person4  sex:1</span></div><div class="line">        <span class="comment">// ID:10006  name:person6  sex:1</span></div><div class="line">        <span class="comment">// ID:10008  name:person8  sex:1</span></div><div class="line">		  </div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>查询数据的sql语句：<code>SELECT * FROM tableName WHERE 字段=值</code>这种是最简单的选择语句，有时你可能还需要限定很多条件总的样式如：<code>SELECT-FROM-WHERE-GROUP BY-HAVING-ORDER BY</code></p>
+<p><strong>事务</strong><br>先简单描述下事务，<code>开始一个事务</code>-&gt;<code>一个数据库操作</code>-&gt;<code>提交事务</code>这就是一个事务的过程，其中伴随着IO的操作。如果将上面的事务执行10000次就会有10000次的IO操作这样肯定影响数据的执行效率，所以我们可以将<code>一个数据库操作</code>改成<code>多个数据库操作</code>，这样来避免多次IO操作提高数据执行效率。除了这个事务可以保证数据一致性，<code>多个数据库操作</code>如果其中一个操作出现异常可以将数据回滚到初始状态，一般用在绑定的事件上。比如A向B转账，<code>A花钱</code>,<code>B收钱</code>其中任何一个环节出现问题都需要回滚数据。下面先看下不用事务处理，执行10000次的插入操作：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line"><span class="comment">//不使用事务</span></div><div class="line">+ (<span class="keyword">void</span>)insertPersonsWithoutTransaction:(<span class="built_in">NSMutableArray</span> *)array &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"startExecute"</span>);</div><div class="line">        </div><div class="line">        <span class="comment">// 操作A，先删除所有数据</span></div><div class="line">        <span class="built_in">NSString</span> *deleteAll = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"DELETE FROM t_person"</span>];</div><div class="line">        [_dataBase executeUpdate:deleteAll];</div><div class="line">        </div><div class="line">        <span class="comment">// 操作B，将所有新数据添加</span></div><div class="line">        <span class="keyword">for</span> (Person *person <span class="keyword">in</span> array) &#123;</div><div class="line">            <span class="built_in">NSString</span> *insertPerson = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"INSERT INTO t_person (personID,name,sex) VALUES ('%@','%@','%d')"</span>,person.personID,person.name,person.sex];</div><div class="line">            [_dataBase executeUpdate:insertPerson];</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"endExecute"</span>);</div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们看下日志打印的时间startExecute:<code>19:11:51.126</code>,endExecute:<code>19:12:03.098</code>,开始执行到结束执行一共用了大概12秒的样子，这个我是在模拟器上跑的时间真机上会比这个时间更长。</p>
+<p>下面是使用事务的代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line"><span class="comment">//使用事务</span></div><div class="line">+ (<span class="keyword">void</span>)insertPersonsWithTransaction:(<span class="built_in">NSMutableArray</span> *)array &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> openDB]) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"startExecute"</span>);</div><div class="line">        </div><div class="line">        <span class="comment">// 开启事务</span></div><div class="line">        [_dataBase beginTransaction];</div><div class="line">        <span class="built_in">BOOL</span> shouldRollBack = <span class="literal">NO</span>;</div><div class="line">        </div><div class="line">        <span class="keyword">@try</span> &#123;</div><div class="line">            <span class="comment">// 操作A，先删除所有数据</span></div><div class="line">            <span class="built_in">NSString</span> *deleteAll = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"DELETE FROM t_person"</span>];</div><div class="line">            <span class="built_in">BOOL</span> isDeleted = [_dataBase executeUpdate:deleteAll];</div><div class="line">            <span class="keyword">if</span> (!isDeleted) &#123;</div><div class="line">            <span class="comment">// 主动抛出异常</span></div><div class="line">                <span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"删除出错"</span> reason:<span class="string">@"delete failed!"</span> userInfo:<span class="literal">nil</span>];</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            </div><div class="line">            <span class="comment">// 操作B，将所有新数据添加</span></div><div class="line">            <span class="keyword">for</span> (Person *person <span class="keyword">in</span> array) &#123;</div><div class="line">                </div><div class="line">                <span class="built_in">NSString</span> *insertPerson = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"INSERT INTO t_person (personID,name,sex) VALUES ('%@','%@','%d')"</span>,person.personID,person.name,person.sex];</div><div class="line">                <span class="built_in">BOOL</span> isUpdate = [_dataBase executeUpdate:insertPerson];</div><div class="line">                </div><div class="line">                <span class="keyword">if</span> (!isUpdate) &#123;</div><div class="line">                <span class="comment">// 主动抛出异常</span></div><div class="line">                    <span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"插入出错"</span> reason:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"insert:%@ failed!"</span>,person.name] userInfo:<span class="literal">nil</span>];</div><div class="line">                &#125;</div><div class="line">                </div><div class="line">            &#125;</div><div class="line">            </div><div class="line">        &#125; <span class="keyword">@catch</span> (<span class="built_in">NSException</span> *exception) &#123;</div><div class="line">            </div><div class="line">            shouldRollBack = <span class="literal">YES</span>;</div><div class="line">            </div><div class="line">        &#125; <span class="keyword">@finally</span> &#123;</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> (!shouldRollBack) &#123;</div><div class="line">                [_dataBase commit];</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                [_dataBase rollback];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"endExecute"</span>);</div><div class="line">        [<span class="keyword">self</span> closeDB];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再来看下执行的开始和结束的打印时间startExecute:<code>19:23:02.551</code>,endExecute:<code>19:23:02.652</code>仅仅相差100毫秒，跟不使用事务有着明显的差距。还有，上面的代码演示了两个任务A&amp;B如何利用事务的一致性进行数据回滚！好了使用事务带来的效率提升你已经看到了，以后涉及到大量数据操作时别忘了使用事务来处理~<br><strong>线程安全</strong><br>当数据库操作是在多线程下操作时使用同一个FMDatabase实例是会出现问题的，那么如何避免这种问题，让多线程下的数据库操作变得安全呢，就是使用FMDatabaseQueue这个核心类，一般应将FMDatabaseQueue的实例作为静态变量存储，它的实例化通过一个API<code>databaseQueueWithPath:</code>使用数据库路径创建。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//FMDBViewController.m</span></div><div class="line"><span class="comment">// 开启异步线程删除所有数据</span></div><div class="line"><span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line">   [DataBaseTool deleteAllPerson];</div><div class="line">&#125;);</div><div class="line">    </div><div class="line"><span class="comment">// 分别开启异步线程插入新数据</span></div><div class="line"><span class="keyword">for</span> (Person *person <span class="keyword">in</span> personArray) &#123;</div><div class="line">   <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line">       [DataBaseTool insertOnePerson:person];</div><div class="line">   &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//DataBaseTool.m</span></div><div class="line">+ (FMDatabaseQueue *)queue &#123;</div><div class="line">    <span class="keyword">if</span> (!_queue) &#123;</div><div class="line">        _queue = [FMDatabaseQueue databaseQueueWithPath:[<span class="keyword">self</span> dbPath]];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> _queue;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)insertOnePerson:(Person *)person &#123;</div><div class="line">    [[<span class="keyword">self</span> queue] inDatabase:^(FMDatabase *db) &#123;</div><div class="line">    </div><div class="line">        <span class="built_in">NSString</span> *insertPerson = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"INSERT INTO t_person (personID,name,sex) VALUES ('%@','%@','%d')"</span>,person.personID,person.name,person.sex];</div><div class="line">        [db executeUpdate:insertPerson];</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"insertOnePerson:%@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">    &#125;];</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">void</span>)deleteAllPerson &#123;</div><div class="line">    [[<span class="keyword">self</span> queue] inDatabase:^(FMDatabase *db) &#123;</div><div class="line">        </div><div class="line">        <span class="built_in">NSString</span> *deletePerson = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"DELETE FROM t_person"</span>];</div><div class="line">        [db executeUpdate:deletePerson];</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面是模拟了，多线程下的数据库操作，如果没有使用FMDatabaseQueue执行过程因多个线程共同争取同一资源而出现crash。好了，至此FMDB的相关知识大多都了解到了，还有兴趣深入研究学习的请查看源码或各大搜索引擎查找资料。</p>
+<p>注意点：</p>
+<ul>
+<li>项目中需要导入<a href="https://github.com/ccgus/fmdb" title="FMDB Github" target="_blank" rel="external">FMDB</a>第三方框架，并且在项目target中导入libsqlite3的动态库。</li>
+<li>FMDB对改动数据库的操作都叫做更新使用<code>executeUpdate</code>这个API，对应选择查询语句的使用<code>executeQuery</code>这个API。</li>
+<li>在sql语句中可以用<code>?</code>来代替一些变量比如<code>%@</code>、<code>%d</code>的占位符。</li>
+<li>多线程操作下要对每个数据库采取线程安全操作即使用<code>FMDatabaseQueue</code>。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/实用技术/" rel="tag"># 实用技术</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/28/3DTouch/" rel="next" title="3D-Touch的使用">
+                <i class="fa fa-chevron-left"></i> 3D-Touch的使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/26/DataPersistence/"
+           data-title="DataPersistence For iOS" data-url="http://yoursite.com/2017/03/26/DataPersistence/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://github.com/CoderHann/imageSource/blob/master/Blog/blog_usr_icon.jpeg?raw=true"
+               alt="CoderHann" />
+          <p class="site-author-name" itemprop="name">CoderHann</p>
+          <p class="site-description motion-element" itemprop="description">运气就是机会碰巧撞到了你的努力!</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/CoderHann" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="/about" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MainBundle-amp-沙盒"><span class="nav-number">2.</span> <span class="nav-text">MainBundle & 沙盒</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MainBundle-安装目录"><span class="nav-number">2.1.</span> <span class="nav-text">MainBundle(安装目录)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#沙盒-数据目录"><span class="nav-number">2.2.</span> <span class="nav-text">沙盒(数据目录)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#沙盒机制"><span class="nav-number">2.2.1.</span> <span class="nav-text">沙盒机制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#沙盒目录"><span class="nav-number">2.2.2.</span> <span class="nav-text">沙盒目录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#preference"><span class="nav-number">3.</span> <span class="nav-text">preference</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSKeyedArchiver"><span class="nav-number">4.</span> <span class="nav-text">NSKeyedArchiver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FMDB-SQLite-3"><span class="nav-number">5.</span> <span class="nav-text">FMDB(SQLite 3)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FMDB简介"><span class="nav-number">5.1.</span> <span class="nav-text">FMDB简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FMDB的使用"><span class="nav-number">5.2.</span> <span class="nav-text">FMDB的使用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CoderHann</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"coderHannComment"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("sAmDOA290qPW0l1mKlFvIjHU-gzGzoHsz", "1WQhXLWP9nAqbCsLhMqqMoCF");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
