@@ -1,0 +1,914 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="随笔,教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言最近项目不是特别紧，有时间看看github写写demo。每次写demo的时候总是需要用到有些基础工具和控件，每次都把需要的工具类移来移去麻烦又没什么技术含量。心生想法把那些好用的工具类放到CocoaPods，下次直接pod导入，这样也知道如何发布自己的开源框架了！
+经过各种引擎的搜索、查阅前辈提供的技术支持以及自己的动手总于把自己的工具类框架发到了CocoaPods。这里记录完整的操作过程给自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="发布开源框架到CocoaPods图文详解">
+<meta property="og:url" content="http://yoursite.com/2017/04/27/发布开源框架到CocoaPods/index.html">
+<meta property="og:site_name" content="CoderHann">
+<meta property="og:description" content="前言最近项目不是特别紧，有时间看看github写写demo。每次写demo的时候总是需要用到有些基础工具和控件，每次都把需要的工具类移来移去麻烦又没什么技术含量。心生想法把那些好用的工具类放到CocoaPods，下次直接pod导入，这样也知道如何发布自己的开源框架了！
+经过各种引擎的搜索、查阅前辈提供的技术支持以及自己的动手总于把自己的工具类框架发到了CocoaPods。这里记录完整的操作过程给自">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_github_image1.png">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image1.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image2.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image3.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image4.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image5.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image6.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image7.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image8.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image9.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image10.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image11.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image12.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image13.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image14.png?raw=true">
+<meta property="og:image" content="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image15.png?raw=true">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image5.png">
+<meta property="og:updated_time" content="2017-04-28T09:32:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="发布开源框架到CocoaPods图文详解">
+<meta name="twitter:description" content="前言最近项目不是特别紧，有时间看看github写写demo。每次写demo的时候总是需要用到有些基础工具和控件，每次都把需要的工具类移来移去麻烦又没什么技术含量。心生想法把那些好用的工具类放到CocoaPods，下次直接pod导入，这样也知道如何发布自己的开源框架了！
+经过各种引擎的搜索、查阅前辈提供的技术支持以及自己的动手总于把自己的工具类框架发到了CocoaPods。这里记录完整的操作过程给自">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_github_image1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/27/发布开源框架到CocoaPods/"/>
+
+
+
+
+
+  <title> 发布开源框架到CocoaPods图文详解 | CoderHann </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CoderHann</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">coderHann’s blog</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/27/发布开源框架到CocoaPods/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="CoderHann">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://github.com/CoderHann/imageSource/blob/master/Blog/blog_usr_icon.jpeg?raw=true">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="CoderHann">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="CoderHann" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                发布开源框架到CocoaPods图文详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-27T17:55:57+08:00">
+                2017-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/27/发布开源框架到CocoaPods/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/27/发布开源框架到CocoaPods/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/04/27/发布开源框架到CocoaPods/" class="leancloud_visitors" data-flag-title="发布开源框架到CocoaPods图文详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近项目不是特别紧，有时间看看github写写demo。每次写demo的时候总是需要用到有些基础工具和控件，每次都把需要的工具类移来移去麻烦又没什么技术含量。心生想法把那些好用的工具类放到CocoaPods，下次直接pod导入，这样也知道如何发布自己的开源框架了！</p>
+<p>经过各种引擎的搜索、查阅前辈提供的技术支持以及自己的动手总于把自己的工具类框架发到了CocoaPods。这里记录完整的操作过程给自己以后查阅也给需要的同事提供一些参考。<br><a id="more"></a><br>该记录参考各个开源框架的结构设计即<code>开源框架</code> + <code>Examples用例</code> 。这里我是把开源框架独立了一个静态Framework项目中，在提供一个使用用例的项目提供验证以及示例。下面我们就一步一步来吧！</p>
+<h2 id="创建github项目以及项目目录"><a href="#创建github项目以及项目目录" class="headerlink" title="创建github项目以及项目目录"></a>创建github项目以及项目目录</h2><h3 id="github项目"><a href="#github项目" class="headerlink" title="github项目"></a>github项目</h3><p>到github上创建一个仓库，如果还没玩过github自己去谷歌或者百度吧。将创建好的项目仓库clone到自己电脑上，其目录结构如下：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_github_image1.png" width="1000" height="200"></p>
+<h3 id="创建工作空间及项目"><a href="#创建工作空间及项目" class="headerlink" title="创建工作空间及项目"></a>创建工作空间及项目</h3><p>在刚刚的项目中创建一个工作空间：<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image1.png?raw=true" width="1000" height="200"></p>
+<p><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image2.png?raw=true" width="1000" height="200"></p>
+<p><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image3.png?raw=true" width="1000" height="200"></p>
+<p>打开上面创建的工作空间，现在我们要创建开源框架的Framework项目<code>File - new - project</code>:<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image4.png?raw=true" width="1000" height="200"></p>
+<p>这里选择我们打开的工作空间如下图：<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image5.png?raw=true" width="1000" height="200"></p>
+<p>我们对刚刚创建的开源框架项目做一些配置：<br>1.更改项目部署版本号：<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image6.png?raw=true" width="1000" height="200"></p>
+<p>2.更改一些编译设置<code>project - taget - build settings</code><br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image7.png?raw=true" width="1000" height="200"><br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image8.png?raw=true" width="1000" height="200"></p>
+<p>2.添加一个测试类<code>TestLog</code>，提供public头文件</p>
+<p><strong>TestLog</strong><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// TestLog.h</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">TestLog</span> : <span class="title">NSObject</span></span></div><div class="line">+ (<span class="keyword">void</span>)methodOne;</div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)methodTwo;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// TestLog.m</span></div><div class="line"><span class="meta">#import <span class="meta-string">"TestLog.h"</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">TestLog</span></span></div><div class="line">+ (<span class="keyword">void</span>)methodOne &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"methodOne"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)methodTwo &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"methodTwo"</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p><strong>SmartUtil.h</strong><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// SmartUtil.h</span></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="comment">//! Project version number for SmartUtil.</span></div><div class="line">FOUNDATION_EXPORT <span class="keyword">double</span> SmartUtilVersionNumber;</div><div class="line"></div><div class="line"><span class="comment">//! Project version string for SmartUtil.</span></div><div class="line">FOUNDATION_EXPORT <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> SmartUtilVersionString[];</div><div class="line"></div><div class="line"><span class="comment">// In this header, you should import all the public headers of your framework using statements like #import &lt;SmartUtil/PublicHeader.h&gt;</span></div><div class="line"></div><div class="line"><span class="meta">#ifndef _SMARTUTIL_</span></div><div class="line"><span class="meta">#define _SMARTUTIL_</span></div><div class="line"></div><div class="line"><span class="meta">#import <span class="meta-string">&lt;SmartUtil/TestLog.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#endif</span></div></pre></td></tr></table></figure></p>
+<p>开放头文件到public下<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image9.png?raw=true" width="1000" height="200"></p>
+<p>到此，开源框架Framework项目配置差不多就这样了，以后添加需要公开的类记得把头文件添加到public里面，然后编译下即可。下面我们添加项目的用例项目SmartUtilExample。<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image10.png?raw=true" width="1000" height="200"></p>
+<p>create的时候选择添加到SmartUtil工作空间下：<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image11.png?raw=true" width="1000" height="200"></p>
+<p>创建完成后项目结构如下：</p>
+<p><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image12.png?raw=true" width="1000" height="200"></p>
+<p>添加我们工作空间的SmartUtil框架：<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image13.png?raw=true" width="1000" height="200"></p>
+<p>导入SmartUtil框架之后我们在AppDelegate验证下我们的两个方法：<br>注：下面两种导入方式都可以<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image14.png?raw=true" width="1000" height="200"></p>
+<p>程序运行结果<br><img src="https://github.com/CoderHann/imageSource/blob/master/createCocoapodsProject/cocoaproject_workspace_image15.png?raw=true" width="1000" height="200"></p>
+<h2 id="发布开源框架"><a href="#发布开源框架" class="headerlink" title="发布开源框架"></a>发布开源框架</h2><p>上面的是一个开源框架+用例项目的搭建，如果你的开源项目不需要使用Example可以不用那么复杂。下面我们将刚刚创建好的框架发布到cocoapods上。</p>
+<h3 id="提交代码-amp-打tag"><a href="#提交代码-amp-打tag" class="headerlink" title="提交代码&amp;打tag"></a>提交代码&amp;打tag</h3><p>目前将我们的开源框架作为release0.0.1版本提交到远程仓库，下面在本地代码仓库路径下打开终端进行以下操作：<br><code>git add .</code>跟踪所有变动<br><code>git commit -m&quot;release version 0.0.1&quot;</code>提交更改<br><code>git pull</code><br><code>git push</code>提交到远程仓库<br><code>git tag -a 0.0.1 -m&quot;release version 0.0.1&quot;</code>给刚刚的版本打个tag<br><code>git push --tags</code>提交tag<br>这样我们的release0.0.1版本就算完成了下面进行pod的制作！</p>
+<h3 id="创建podspec文件"><a href="#创建podspec文件" class="headerlink" title="创建podspec文件"></a>创建podspec文件</h3><p>在项目根目录下面创建<code>podspec</code>文件：<code>pod spec create SmartUtil</code></p>
+<p><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image1.png"></p>
+<h3 id="编辑podspec文件"><a href="#编辑podspec文件" class="headerlink" title="编辑podspec文件"></a>编辑podspec文件</h3><p>在编辑podspec文件之前先简单了解里面的这些属性都是什么意思：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// pod库名字</span></div><div class="line">s.name         = <span class="string">"SmartUtil"</span></div><div class="line"></div><div class="line"><span class="comment">// 该库版本对应的版本号</span></div><div class="line">s.version      = <span class="string">"0.0.1"</span></div><div class="line"></div><div class="line"><span class="comment">// 库的概括描述</span></div><div class="line">s.summary      = <span class="string">"smart Utils for IOS Development!"</span></div><div class="line"></div><div class="line"><span class="comment">// 对应的代码仓库主页</span></div><div class="line">s.homepage     = <span class="string">"https://github.com/CoderHann/SmartUtil"</span></div><div class="line"></div><div class="line"><span class="comment">// 遵守的协议</span></div><div class="line">s.license      = <span class="string">"GNU"</span></div><div class="line"></div><div class="line"><span class="comment">// 作者和邮箱</span></div><div class="line">s.author             = &#123; <span class="string">"CoderHann"</span> =&gt; <span class="string">"hyt163mail@163.com"</span> &#125;</div><div class="line"></div><div class="line"><span class="comment">// 支持的系统版本</span></div><div class="line">s.platform     = :ios, <span class="string">"8.0"</span></div><div class="line"></div><div class="line"><span class="comment">// git:代码仓库地址  tag：对应的release tag，一般都和s.version保持一致</span></div><div class="line">s.source       = &#123; :git =&gt; <span class="string">"https://github.com/CoderHann/SmartUtil.git"</span>, :tag =&gt; <span class="string">"#&#123;s.version&#125;"</span> &#125;</div><div class="line"></div><div class="line"><span class="comment">// 下面类似正则表达式，标示哪些文件下的那些文件作为pod库的内容</span></div><div class="line">s.source_files  = <span class="string">"SmartUtil"</span>, <span class="string">"SmartUtil/**/*.&#123;h,m&#125;"</span></div><div class="line"></div><div class="line"><span class="comment">// 所使用的框架，如果有多个使用这种`s.frameworks = "SomeFramework", "AnotherFramework"`</span></div><div class="line"><span class="comment">// 如果使用第三方的使用这种`s.dependency "SomeKit", "~&gt; 1.1.1"`</span></div><div class="line">s.framework  = <span class="string">"UIKit"</span></div></pre></td></tr></table></figure></p>
+<p>更改上面各个属性后我们来检查下podspec文件是否合法：<code>pod spec lint SmartUtil.podspec</code><br>出现下图表示我们的podspec文件合法：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image2.png"></p>
+<p><strong>注意</strong><br>podspec的pod版本号要在github的远程仓库中，不然校验合法会失败的。</p>
+<h3 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h3><p>没有注册过Trunk的使用<code>pod trunk register 邮箱 用户名</code>进行注册，稍后会发邮件进行确认。</p>
+<p>邮件确认后查看下是否注册成功<code>pod trunk me</code>如果注册成功会显示你的信息。</p>
+<p>是时候发布了<code>pod trunk push</code>出现下图表示我们已经把自己的开源库发到了CocoaPods上了：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image3.png"></p>
+<p>使用<code>pod search SmartUtil</code>搜索我们的pods：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image4.png"></p>
+<p><strong>注意</strong><br>如果pod search 搜索不到的话尝试下下面的两种方法：<br>1.<code>pod setup</code>更新pod库。<br>2.将<code>~/Library/Caches/CocoaPods/search_index.json</code>的索引文件删掉。</p>
+<h3 id="使用pod"><a href="#使用pod" class="headerlink" title="使用pod"></a>使用pod</h3><p>将<code>pod &#39;SmartUtil&#39;, &#39;~&gt; 0.0.1&#39;</code>放到我们的Podfile中，在项目Podfile目录执行<code>pod update</code><br>稍等片刻~我们熟悉的目录就出现在项目的pods中了：<br><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/createCocoapodsProject/cocoaproject_publish_image5.png"></p>
+<p>ok!大功告成!最后附上本示例的github地址<a href="https://github.com/CoderHann/SmartUtil" target="_blank" rel="external">SmartUtil</a>求赞👍求加星✨</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/随笔/" rel="tag"># 随笔</a>
+          
+            <a href="/tags/教程/" rel="tag"># 教程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/26/DataPersistence/" rel="next" title="DataPersistence For iOS">
+                <i class="fa fa-chevron-left"></i> DataPersistence For iOS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/27/发布开源框架到CocoaPods/"
+           data-title="发布开源框架到CocoaPods图文详解" data-url="http://yoursite.com/2017/04/27/发布开源框架到CocoaPods/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://github.com/CoderHann/imageSource/blob/master/Blog/blog_usr_icon.jpeg?raw=true"
+               alt="CoderHann" />
+          <p class="site-author-name" itemprop="name">CoderHann</p>
+          <p class="site-description motion-element" itemprop="description">运气就是机会碰巧撞到了你的努力!</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/CoderHann" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="/about" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建github项目以及项目目录"><span class="nav-number">2.</span> <span class="nav-text">创建github项目以及项目目录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#github项目"><span class="nav-number">2.1.</span> <span class="nav-text">github项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建工作空间及项目"><span class="nav-number">2.2.</span> <span class="nav-text">创建工作空间及项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布开源框架"><span class="nav-number">3.</span> <span class="nav-text">发布开源框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提交代码-amp-打tag"><span class="nav-number">3.1.</span> <span class="nav-text">提交代码&打tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建podspec文件"><span class="nav-number">3.2.</span> <span class="nav-text">创建podspec文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编辑podspec文件"><span class="nav-number">3.3.</span> <span class="nav-text">编辑podspec文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布"><span class="nav-number">3.4.</span> <span class="nav-text">发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用pod"><span class="nav-number">3.5.</span> <span class="nav-text">使用pod</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CoderHann</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"coderHannComment"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("sAmDOA290qPW0l1mKlFvIjHU-gzGzoHsz", "1WQhXLWP9nAqbCsLhMqqMoCF");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
