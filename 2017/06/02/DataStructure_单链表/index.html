@@ -1,0 +1,883 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="基础," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="单链表简介单链表的结构如上，有别于连续存储在内存中的数组，是一种以链式形式的存储结构。下面详细介绍下该链表中存在的元素：结点：构成单向链表的基本单元我们称为结点，其中每个结点都有一个data区和一个结点指向区。data区就是存放数据的地方，一般存储基本类型数据或者引用对象的地址，结点指向区存储下一个结点的地址。头结点：指向单链表中的第一个结点，即首结点。尾结点：指向单链表中的最后一个结点。链表长度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单向链表的实现">
+<meta property="og:url" content="http://yoursite.com/2017/06/02/DataStructure_单链表/index.html">
+<meta property="og:site_name" content="CoderHann">
+<meta property="og:description" content="单链表简介单链表的结构如上，有别于连续存储在内存中的数组，是一种以链式形式的存储结构。下面详细介绍下该链表中存在的元素：结点：构成单向链表的基本单元我们称为结点，其中每个结点都有一个data区和一个结点指向区。data区就是存放数据的地方，一般存储基本类型数据或者引用对象的地址，结点指向区存储下一个结点的地址。头结点：指向单链表中的第一个结点，即首结点。尾结点：指向单链表中的最后一个结点。链表长度">
+<meta property="og:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/datastructure/ds_singleLinkedList.png">
+<meta property="og:updated_time" content="2017-06-07T06:47:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单向链表的实现">
+<meta name="twitter:description" content="单链表简介单链表的结构如上，有别于连续存储在内存中的数组，是一种以链式形式的存储结构。下面详细介绍下该链表中存在的元素：结点：构成单向链表的基本单元我们称为结点，其中每个结点都有一个data区和一个结点指向区。data区就是存放数据的地方，一般存储基本类型数据或者引用对象的地址，结点指向区存储下一个结点的地址。头结点：指向单链表中的第一个结点，即首结点。尾结点：指向单链表中的最后一个结点。链表长度">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/CoderHann/imageSource/master/datastructure/ds_singleLinkedList.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/02/DataStructure_单链表/"/>
+
+
+
+
+
+  <title> 单向链表的实现 | CoderHann </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">CoderHann</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">coderHann’s blog</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/02/DataStructure_单链表/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="CoderHann">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://github.com/CoderHann/imageSource/blob/master/Blog/blog_usr_icon.jpeg?raw=true">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="CoderHann">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="CoderHann" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                单向链表的实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-02T16:18:23+08:00">
+                2017-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/内功修炼/" itemprop="url" rel="index">
+                    <span itemprop="name">内功修炼</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/内功修炼/数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/02/DataStructure_单链表/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/02/DataStructure_单链表/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/02/DataStructure_单链表/" class="leancloud_visitors" data-flag-title="单向链表的实现">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="单链表简介"><a href="#单链表简介" class="headerlink" title="单链表简介"></a>单链表简介</h3><p><img src="https://raw.githubusercontent.com/CoderHann/imageSource/master/datastructure/ds_singleLinkedList.png"><br>单链表的结构如上，有别于连续存储在内存中的数组，是一种以链式形式的存储结构。下面详细介绍下该链表中存在的元素：<br><strong>结点</strong>：构成单向链表的基本单元我们称为结点，其中每个结点都有一个data区和一个结点指向区。data区就是存放数据的地方，一般存储基本类型数据或者引用对象的地址，结点指向区存储下一个结点的地址。<br><strong>头结点</strong>：指向单链表中的第一个结点，即首结点。<br><strong>尾结点</strong>：指向单链表中的最后一个结点。<br><strong>链表长度</strong>：记录链表中存在的结点个数，即我们存储的数据个数。<br><a id="more"></a></p>
+<h3 id="单链表的实现"><a href="#单链表的实现" class="headerlink" title="单链表的实现"></a>单链表的实现</h3><p>链表的基本介绍如上，下面我们需要根据代码来进行说明。本博客主要流程示例代码使用java语言，每块代码前都标示是属于哪个java文件下的哪个类。废话不多开始！！！</p>
+<h4 id="结点类的创建"><a href="#结点类的创建" class="headerlink" title="结点类的创建"></a>结点类的创建</h4><p>创建链表的基本单元结点类如下，该类提供了数据存储区和接点指向区，还提供了便捷的构造函数，以及结点操作的相关方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// SingleLinkedList.java</span></div><div class="line"><span class="comment">// class Node&lt;E&gt;</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 数据区</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> E data;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 下一个结点引用</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> Node&lt;E&gt; next;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">        data = e;</div><div class="line">        next = <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 在该结点的后面追加一个结点</div><div class="line">     * <span class="doctag">@param</span> element 要添加的结点</div><div class="line">     * <span class="doctag">@return</span> 添加的结点</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> Node&lt;E&gt; <span class="title">addElement</span><span class="params">(Node&lt;E&gt; element)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.next == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">this</span>.next = element;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            element.next = <span class="keyword">this</span>.next;</div><div class="line">            <span class="keyword">this</span>.next = element;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> element;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 判断该结点后是否有下一个结点</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.next != <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="单链表类的创建"><a href="#单链表类的创建" class="headerlink" title="单链表类的创建"></a>单链表类的创建</h4><p>单链表类<code>SingleLinkedList</code>主要用于对数据的添加、删除、打印，反转等功能，下面是<code>SingleLinkedList</code>的主要成员变量的介绍：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// SingleLinkedList.java</span></div><div class="line"><span class="comment">// class SingleLinkedList&lt;E&gt;</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleLinkedList</span>&lt;<span class="title">E</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 存储结点数量</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> length;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 头结点引用</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> Node&lt;E&gt; header;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 尾结点引用</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> Node&lt;E&gt; footer;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>添加功能</strong><br>上面是<code>SingleLinkedList</code>数据成员的代码，这里我们给它加入添加功能的方法，添加方法分为了两种，一种是直接在链表尾部添加一个数据，另一个是在指定位置结点的后面添加一个数据。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 在链表最后的位置添加对象</div><div class="line"> * <span class="doctag">@param</span> e 泛型对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; indexNode = footer;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        addElement(indexNode,<span class="keyword">new</span> Node&lt;&gt;(e));</div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e1) &#123;</div><div class="line">        e1.printStackTrace();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 在index位置的对象后面添加对象</div><div class="line"> * <span class="doctag">@param</span> index 索引从0开始，0表示在首结点前面添加，1表示header</div><div class="line"> * <span class="doctag">@param</span> e 泛型对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index,E e)</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; indexNode = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        indexNode = getNode(index);</div><div class="line">        addElement(indexNode,<span class="keyword">new</span> Node&lt;&gt;(e));</div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e1) &#123;</div><div class="line">        e1.printStackTrace();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 添加对象的集中处理代码块</div><div class="line"> * <span class="doctag">@param</span> frontElement 在这个对象上执行添加操作</div><div class="line"> * <span class="doctag">@param</span> element 要添加的对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(Node&lt;E&gt; frontElement,Node&lt;E&gt; element)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (element.data == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"添加数据为空"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (frontElement == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (header != <span class="keyword">null</span>) &#123; <span class="comment">//插入位置为0，链表不为空</span></div><div class="line">            element.next = header;</div><div class="line">            header = element;</div><div class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">//链表长度为0，在首位添加数据</span></div><div class="line">            header = element;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        element.next = frontElement.next;</div><div class="line">        frontElement.next = element;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!element.hasNext()) &#123;</div><div class="line">        footer = element;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    length++;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们来详细的来看下这三个方法：<br>1.<code>private void addElement(Node&lt;E&gt; frontElement,Node&lt;E&gt; element)</code>:这个是添加数据的核心处理方法，该方法接收要添加的结点的前一个结点，以及要添加的结点，如果链表为空，或者想再链表的头部添加结点时<code>frontElement</code>为空。这种情况的添加要操作header的指向；还有种情况是<code>frontElement</code>有值，说明是在链中或者链尾添加数据，那就将<code>frontElement.next</code>给到新结点的next，然后新结点追加上在<code>frontElement.next</code>上即可。这里面还有个注意点是关于尾结点的更改，如过新添加的结点的next是null值的话，说明该添加的结点取代了原来的尾结点，需要重设footer的引用对象。<br>2.<code>public void add(E e)</code>:这个是在链表的尾部添加e数据，调用addElement方法传递的尾结点的引用以及新值。<br>3.<code>public void add(int index,E e)</code>:该方法是在index位置的结点后面添加新的元素，里面主要是获取了index所在的结点，然后传值给核心方法<code>addElement</code>。</p>
+<p><strong>删除功能</strong><br>删除功能也提供了两种方式：一个将index所在的数据删除，另一种是将对象地址相同的对象删除。除了这两个方法还提供了一个集中处理删除操作的方法，以下是代码的展示。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 链表的删除操作 索引</div><div class="line"> * <span class="doctag">@param</span> index 将要删除的对象索引 （1-length）</div><div class="line"> * <span class="doctag">@return</span> 删除掉的对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">delete</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (index &lt; <span class="number">1</span> || index &gt; <span class="keyword">this</span>.length) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Node&lt;E&gt; deletedNode = <span class="keyword">null</span>;</div><div class="line">    Node&lt;E&gt; indexNode = header;</div><div class="line">    Node&lt;E&gt; frontNode = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (index &gt; <span class="number">0</span>) &#123;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (index == <span class="number">1</span>) &#123;</div><div class="line">            deletedNode = deleteElement(frontNode,indexNode);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        index--;</div><div class="line">        frontNode = indexNode;</div><div class="line">        indexNode = indexNode.next;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> deletedNode.data;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 链表的删除操作 指定对象</div><div class="line"> * <span class="doctag">@param</span> e 将要删除的对象</div><div class="line"> * <span class="doctag">@return</span> 删除掉的对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">delete</span><span class="params">(E e)</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; deletedNode = <span class="keyword">null</span>;</div><div class="line">    Node&lt;E&gt; indexNode = header;</div><div class="line">    Node&lt;E&gt; frontNode = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (indexNode != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (indexNode.data == e) &#123;</div><div class="line"></div><div class="line">            deletedNode = deleteElement(frontNode,indexNode);</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        frontNode = indexNode;</div><div class="line">        indexNode = indexNode.next;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> deletedNode.data;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 删除操作集中处理</div><div class="line"> * <span class="doctag">@param</span> frontElement 前一个对象Node</div><div class="line"> * <span class="doctag">@param</span> element 要删除的对象Node</div><div class="line"> * <span class="doctag">@return</span> 删除掉的对象Node</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> Node&lt;E&gt; <span class="title">deleteElement</span><span class="params">(Node&lt;E&gt; frontElement,Node&lt;E&gt; element)</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; deletedNode = element;</div><div class="line">    Node&lt;E&gt; preNode = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">if</span> (frontElement == <span class="keyword">null</span>) &#123;</div><div class="line"></div><div class="line">        header = element.next;</div><div class="line">        preNode = <span class="keyword">null</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">        frontElement.next = element.next;</div><div class="line">        preNode = frontElement;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!deletedNode.hasNext()) &#123;</div><div class="line">        footer = preNode;</div><div class="line">    &#125;</div><div class="line">    length--;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> deletedNode;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>现在对这三个方法进行详细介绍：<br>1.<code>private Node&lt;E&gt; deleteElement(Node&lt;E&gt; frontElement,Node&lt;E&gt; element)</code>:该方法是删除功能的核心方法，跟添加功能的核心方法类似都有两个参数，分别对应要删除的结点的前一个结点和要删除的结点。删除功能相对于添加要容易一点把删除头结点的区分开来就ok，即<code>frontElement</code>为null时表示要删除头结点，操作<code>header</code>的指向为<code>header.next</code>即可。<code>frontElement</code>有值时执行<code>frontElement.next</code>为要删除结点的下一个<code>element.next</code>即可。还有就是删除的结点如果<code>next</code>为空时说明删除的是尾结点，需要调整footer的引用为<code>frontElement</code>。<br>2.<code>public E delete(int index)</code>:删除index处的数据，并将这个数据返回。主要是获取删除方法需要的两个参数。<br>3.<code>public E delete(E e)</code>:删除数据e,如果e不存在该方法的调用不会骑任何作用。</p>
+<p><strong>链表的反转</strong><br>链表的反转即将链表原有的数据顺序以及指向颠倒下，请先看源码实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 链表的反转[A,B,C,D]-&gt;[D,C,B,A]</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reverseSingleLinkedList</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; firstElement = header;</div><div class="line"></div><div class="line">    reverse(firstElement);</div><div class="line"></div><div class="line">    Node&lt;E&gt; tempElement = header;</div><div class="line">    header = footer;</div><div class="line">    footer = tempElement;</div><div class="line">    footer.next = <span class="keyword">null</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">reverse</span><span class="params">(Node&lt;E&gt; currentElement)</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; nextElement = currentElement.next;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (nextElement.hasNext()) &#123;</div><div class="line">        reverse(nextElement);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    nextElement.next = currentElement;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>单链表的反转其实可以看做是数据上的逆序，举个列子列表内有四个数据分别是[A-&gt;B-&gt;C-&gt;D-&gt;null]逆序后为[D-&gt;C-&gt;B-&gt;A-&gt;null]。下面我们看看上面的两个方法都做了什么事情：<br>1.<code>private void reverse(Node&lt;E&gt; currentElement)</code>:该方法内部采用递归方式将数据分散开为A、B、C、D。然后进行逆序指向，即D-&gt;C-&gt;B-&gt;A-&gt;B。这个是调用完该方法后的指向。其中存在的问题是header指向的是A，footer指向的是D，还有A的下一个指向为B。<br>1.<code>public void reverseSingleLinkedList()</code>:这个方法除了调用<code>reverse</code>方法外还要对上面的存在的问题进行处理，先进行header和footer的更改，然后将footer的下一个指向null。最终将变成D-&gt;C-&gt;B-&gt;A-&gt;null的顺序。</p>
+<p><strong>其它的方法</strong><br>单链表的核心方法上面已经介绍过了，下面把剩下的其它代码贴出来分别是获取指定index上的实例数据<code>public E getObject(int index)</code>、结点数据<code>private Node&lt;E&gt; getNode(int index) throws Exception</code>以及遍历链表的方法<code>public void printSingleLinkedList()</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 获取指定索引位置的对象</div><div class="line"> * <span class="doctag">@param</span> index 索引</div><div class="line"> * <span class="doctag">@return</span> 链表存储的对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">getObject</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (index &lt; <span class="number">1</span> || index &gt; <span class="keyword">this</span>.length) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Node&lt;E&gt; node = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        node = getNode(index);</div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> node.data;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 获取对应index的结点对象element</div><div class="line"> * <span class="doctag">@param</span> index 指定索引</div><div class="line"> * <span class="doctag">@return</span> Node&lt;E&gt; 对象</div><div class="line"> * <span class="doctag">@throws</span> Exception</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> Node&lt;E&gt; <span class="title">getNode</span><span class="params">(<span class="keyword">int</span> index)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt; <span class="keyword">this</span>.length) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"索引值越界"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Node&lt;E&gt; node = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (index == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">return</span> node;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Node&lt;E&gt; indexNode = header;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; index - <span class="number">1</span>;i++) &#123;</div><div class="line">        indexNode = indexNode.next;</div><div class="line">    &#125;</div><div class="line">    node = indexNode;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">return</span> node;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 打印单链表的数据</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printSingleLinkedList</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">    Node&lt;E&gt; node = header;</div><div class="line">    System.out.print(<span class="string">"SingleLinkedList:["</span>);</div><div class="line">    <span class="keyword">while</span> (node != <span class="keyword">null</span>) &#123;</div><div class="line"></div><div class="line">        System.out.print(node.data);</div><div class="line">        <span class="keyword">if</span> (node.hasNext()) &#123;</div><div class="line">            System.out.print(<span class="string">","</span>);</div><div class="line">        &#125;</div><div class="line">        node = node.next;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    System.out.println(<span class="string">"]"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>单向链表是由一个个结点有顺序的链接而成的结点列表，第一个结点有header指向是头结点最后一个结点由footer指向是尾结点。更普通的线性结构的数组比较起来具有以下的优点：结点的添加(插入)、删除比较方便，不需要移动数据只需要更新下一个结点指向即可；除此之外链表在空间利用上更好点不需要占用较大的连续存储空间；当然也会有缺点：查询的操作没有线性表的效率高。所以在使用这两种结构时要根据需求决定，如果插入和删除数据比较多的用单链表比较合适，查询比较多的用线性数组要好点。</p>
+<h3 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h3><p>更多相关内容请前往<a href="/2017/06/06/basicKnowlegeIndex/">内功修炼系列</a>！！！</p>
+<pre><code class="objc">
+</code></pre>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/基础/" rel="tag"># 基础</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/04/Java实用小技术持续更新/" rel="next" title="Java实用小技术持续更新">
+                <i class="fa fa-chevron-left"></i> Java实用小技术持续更新
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/06/basicKnowlegeIndex/" rel="prev" title="内功修炼系列索引">
+                内功修炼系列索引 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/06/02/DataStructure_单链表/"
+           data-title="单向链表的实现" data-url="http://yoursite.com/2017/06/02/DataStructure_单链表/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://github.com/CoderHann/imageSource/blob/master/Blog/blog_usr_icon.jpeg?raw=true"
+               alt="CoderHann" />
+          <p class="site-author-name" itemprop="name">CoderHann</p>
+          <p class="site-description motion-element" itemprop="description">运气就是机会碰巧撞到了你的努力!</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/CoderHann" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="/about" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#单链表简介"><span class="nav-number">1.</span> <span class="nav-text">单链表简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单链表的实现"><span class="nav-number">2.</span> <span class="nav-text">单链表的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#结点类的创建"><span class="nav-number">2.1.</span> <span class="nav-text">结点类的创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单链表类的创建"><span class="nav-number">2.2.</span> <span class="nav-text">单链表类的创建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附加"><span class="nav-number">4.</span> <span class="nav-text">附加</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CoderHann</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"coderHannComment"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("sAmDOA290qPW0l1mKlFvIjHU-gzGzoHsz", "1WQhXLWP9nAqbCsLhMqqMoCF");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
